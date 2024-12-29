@@ -82,4 +82,3 @@ VendoraX is a web application designed for renting, buying, and selling products
    docker-compose down
    ```
    This will stop and remove the backend and database containers.
-```
