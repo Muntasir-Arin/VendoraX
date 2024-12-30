@@ -3,16 +3,15 @@ const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
 const typeDefs = require('./graphql/typeDefs');
 const resolvers = require('./graphql/resolvers');
-const prisma = require('../prisma/client'); // Import Prisma Client
+const prisma = require('../prisma/client');
 
 const app = express();
 
-// Set up Apollo Server
 const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: ({ req }) => ({
-    prisma, // You can also pass Prisma Client into the context if needed
+    prisma, 
   }),
 });
 
