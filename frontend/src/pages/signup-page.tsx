@@ -1,12 +1,15 @@
 import { useState, ChangeEvent, FormEvent } from "react";
-import { Link } from "react-router-dom";
-import { Eye, EyeOff, ChevronLeft, ChevronRight, LoaderIcon } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Eye, EyeOff, ChevronLeft, ChevronRight, LoaderIcon } from 'lucide-react';
 import { z } from "zod";
+import { useMutation } from '@apollo/client';
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { toast } from "sonner";
 import { signupSchema } from "../lib/utils";
+import { SIGNUP_MUTATION } from "../lib/graphql/mutations";
+import {GET_ME_QUERY} from "../lib/graphql/queries";
 
 interface FormData {
   firstName: string;
@@ -40,7 +43,7 @@ const reviews: Review[] = [
     role: "Seller",
     photo: "/images/user_2.jpg",
     content:
-      "VendoraX has made selling my old electronics so easy. The listing process is simple, and I can manage my products effortlessly. I appreciate the secure payment system, and I’ve sold a number of items without any issues!",
+      "VendoraX has made selling my old electronics so easy. The listing process is simple, and I can manage my products effortlessly. I appreciate the secure payment system, and I've sold a number of items without any issues!",
   },
   {
     id: 3,
@@ -64,7 +67,7 @@ const reviews: Review[] = [
     role: "Buyer",
     photo: "/images/user_5.jpg",
     content:
-      "I love how fast and responsive VendoraX is! The app loads quickly, and I had no issues browsing through different product categories. The ability to filter by condition, price, and location makes it easy to find exactly what I’m looking for.",
+      "I love how fast and responsive VendoraX is! The app loads quickly, and I had no issues browsing through different product categories. The ability to filter by condition, price, and location makes it easy to find exactly what I'm looking for.",
   },
 ];
 
@@ -73,6 +76,7 @@ interface Errors {
 }
 
 export function SignupPage() {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState<FormData>({
@@ -84,8 +88,24 @@ export function SignupPage() {
     confirmPassword: "",
   });
   const [errors, setErrors] = useState<Errors>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentReview, setCurrentReview] = useState(0);
+
+  const [signup, { loading: isSubmitting }] = useMutation(SIGNUP_MUTATION, {
+    update(cache, { data: { register } }) {
+      cache.writeQuery({
+        query: GET_ME_QUERY,
+        data: { me: register.user },
+      });
+    },
+    onCompleted: (data) => {
+      localStorage.setItem('auth_token', data.register.token);
+      toast("Account created successfully!");
+      navigate('/dashboard');
+    },
+    onError: (error) => {
+      toast("Signup failed: " + error.message);
+    }
+  });
 
   const nextReview = () => {
     setCurrentReview((prev) => (prev + 1) % reviews.length);
@@ -109,20 +129,22 @@ export function SignupPage() {
 
     try {
       signupSchema.parse(formData);
-      setIsSubmitting(true);
 
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log(formData);
-      toast("Account created successfully!");
+      await signup({
+        variables: {
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          phone: formData.phone,
+          password: formData.password,
+        }
+      });
     } catch (error) {
       if (error instanceof z.ZodError) {
         setErrors(error.flatten().fieldErrors);
       } else {
         toast("Something went wrong. Please try again.");
       }
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -340,8 +362,7 @@ export function SignupPage() {
             Already have an account?{" "}
             <Link
               to="/login"
-              className="text-orange-500 hover:text-orange-600 font-medium"
-            >
+              className="text-orange-500 hover:text-orange-600 font-medium">
               Log In
             </Link>
           </div>
@@ -350,3 +371,4 @@ export function SignupPage() {
     </div>
   );
 }
+

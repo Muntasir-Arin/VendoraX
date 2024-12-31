@@ -1,5 +1,5 @@
 import { useState, ChangeEvent, FormEvent } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff, ChevronLeft, ChevronRight, LoaderIcon } from "lucide-react";
 import { z } from "zod";
 import { Button } from "../components/ui/button";
@@ -7,6 +7,10 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { toast } from "sonner";
 import { loginSchema } from "../lib/utils";
+import { LOGIN_MUTATION } from "../lib/graphql/mutations";
+import { useMutation } from '@apollo/client';
+import { GET_ME_QUERY } from "@/lib/graphql/queries";
+
 
 interface FormData {
   email: string;
@@ -86,13 +90,13 @@ interface Errors {
 }
 
 export function LoginPage() {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     email: "",
     password: "",
   });
   const [errors, setErrors] = useState<Errors>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentReview, setCurrentReview] = useState(0);
 
   const nextReview = () => {
@@ -111,26 +115,42 @@ export function LoginPage() {
     }));
   };
 
+  const [login, { loading: isSubmitting }] = useMutation(LOGIN_MUTATION, {
+    update(cache, { data: { login } }) {
+      cache.writeQuery({
+        query: GET_ME_QUERY,
+        data: { me: login.user },
+      });
+    },
+    onCompleted: (data) => {
+      localStorage.setItem('auth_token', data.login.token);
+      toast("Login successful!");
+      navigate('/dashboard');
+    },
+    onError: (error) => {
+      toast("Login failed: " + error.message);
+    }
+  });
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrors({});
 
     try {
       loginSchema.parse(formData);
-      setIsSubmitting(true);
+      await login({
+        variables: {
+          email: formData.email,
+          password: formData.password
+        }
+      });
 
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log(formData);
-      toast("Account created successfully!");
     } catch (error) {
       if (error instanceof z.ZodError) {
         setErrors(error.flatten().fieldErrors);
       } else {
         toast("Something went wrong. Please try again.");
       }
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -259,18 +279,18 @@ export function LoginPage() {
             </Button>
           ) : (
             <Button type="submit" className="w-full bg-orange-500 text-white p-3 rounded-lg hover:bg-orange-600 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed">
-              Create an Account
+              Log In
             </Button>
           )}
           </form>
 
           <div className="mt-6 text-center text-gray-500">
-            Already have an account?{" "}
+            Don't have an account?{" "}
             <Link
-              to="/login"
+              to="/signup"
               className="text-orange-500 hover:text-orange-600 font-medium"
             >
-              Log In
+              Create an Account
             </Link>
           </div>
         </div>

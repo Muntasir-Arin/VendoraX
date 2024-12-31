@@ -6,8 +6,21 @@ ApolloError = require('apollo-server-express').ApolloError;
 
 const userResolver = {
   Query: {
-    users: async () => {
-      return await prisma.user.findMany();
+    me: async (_, __, { user }) => {
+      console.log('user', user);
+      if (!user) {
+        throw new ApolloError('User not authenticated', 'UNAUTHENTICATED');
+      }
+
+      const userData = await prisma.user.findUnique({
+        where: { id: user.id },
+      });
+
+      if (!userData) {
+        throw new ApolloError('User not found', 'USER_NOT_FOUND');
+      }
+
+      return userData;
     },
   },
   Mutation: {

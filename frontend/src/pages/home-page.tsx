@@ -8,27 +8,7 @@ export function HomePage() {
 
   return (
     <div className="min-h-screen">
-      <header className="bg-black text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex justify-between items-center">
-            <div className="text-orange-500 text-3xl font-bold">V:</div>
-            <nav className="flex gap-6">
-              <Link to="/" className="text-white font-medium">
-                Home
-              </Link>
-              <Link to="/products" className="text-gray-300 hover:text-white transition-colors">
-                Products
-              </Link>
-              <Link to="/login" className="text-gray-300 hover:text-white transition-colors">
-                Login
-              </Link>
-            </nav>
-          </div>
-        </div>
-      </header>
-
-      {/* Hero Section */}
-      <section className="bg-black text-white py-20">
+      <section className="bg-black text-white pb-32 pt-48">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
             <h1 className="text-5xl font-bold mb-6">

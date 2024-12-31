@@ -4,27 +4,6 @@ import { products } from '../lib/data';
 export  function ProductsPage() {
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-black text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex justify-between items-center">
-            <div className="text-orange-500 text-3xl font-bold">D</div>
-            <nav className="flex gap-6">
-              <Link to="/" className="text-gray-300 hover:text-white transition-colors">
-                Home
-              </Link>
-              <Link to="/products" className="text-white font-medium">
-                Products
-              </Link>
-              <Link to="/login" className="text-gray-300 hover:text-white transition-colors">
-                Login
-              </Link>
-            </nav>
-          </div>
-        </div>
-      </header>
-
-      {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <h1 className="text-4xl font-bold mb-8">All Products</h1>
         
