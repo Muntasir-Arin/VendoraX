@@ -5,29 +5,33 @@ services:
     ports:
       - "5173:5173"
     depends_on:
-      - backend  
+      - backend
 
   backend:
     build:
       context: ./backend
     ports:
-      - "4000:4000" 
+      - "4000:4000"
     environment:
       - DATABASE_URL=postgresql://postgres:password@postgres:5432/mydatabase?schema=public
       - NODE_ENV=development
+      - PORT=4000
+      - GRAPHQL_PLAYGROUND=true 
+      - JWT_SECRET=developmentdevelopmentdevelopment
     depends_on:
-      - postgres  
+      - postgres
 
   postgres:
     image: postgres:latest
+    restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
       POSTGRES_DB: mydatabase
     ports:
-      - "5432:5432"  
+      - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data  
+      - postgres_data:/var/lib/postgresql/data
 
 volumes:
   postgres_data:

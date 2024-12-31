@@ -1,12 +1,13 @@
-const userResolvers = require('./userResolvers');
-
+const userResolver = require('./userResolvers');
+const productResolver = require('./productResolvers');
 const resolvers = {
   Query: {
-    getUser: userResolvers.getUser,
-    getAllUsers: userResolvers.getAllUsers,
+    ...userResolver.Query,
+    ...productResolver.Query,
   },
   Mutation: {
-    createUser: userResolvers.createUser,
+    ...userResolver.Mutation,
+    ...productResolver.Mutation,
   },
 };
 

@@ -1,5 +1,5 @@
 # Step 1: Use an official Node.js runtime as a parent image
-FROM node:18-alpine
+FROM node:alpine
 
 # Step 2: Set the working directory inside the container
 WORKDIR /app
@@ -21,3 +21,4 @@ EXPOSE 4000
 
 # Step 8: Define the command to run the app
 CMD ["yarn", "start"]
+

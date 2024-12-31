@@ -1,28 +1,77 @@
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL") // Make sure your .env contains the correct DATABASE_URL
-}
-
 generator client {
   provider = "prisma-client-js"
 }
 
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
 model User {
-  id       Int     @id @default(autoincrement())
-  email    String  @unique
-  password String
-  name     String?
-  products Product[]
-  createdAt DateTime @default(now())
+  id           Int           @id @default(autoincrement())
+  email        String        @unique
+  password     String
+  createdAt    DateTime      @default(now())
+  firstName    String
+  lastName     String
+  phone        String
+  updatedAt    DateTime      @updatedAt
+  products     Product[]     @relation("UserProducts")
+  transactions Transaction[] @relation("UserTransactions")
 }
 
 model Product {
-  id          Int     @id @default(autoincrement())
-  title       String
-  description String
-  price       Float
-  owner       User    @relation(fields: [ownerId], references: [id])
-  ownerId     Int
-  categories  String[]
-  createdAt   DateTime @default(now())
+  id           Int           @id @default(autoincrement())
+  description  String
+  price        Float
+  ownerId      Int
+  createdAt    DateTime      @default(now())
+  name         String
+  pricePerHour Float
+  status       ProductStatus @default(AVAILABLE)
+  updatedAt    DateTime      @updatedAt
+  categories   Category[]
+  deletedAt    DateTime?
+  owner        User          @relation("UserProducts", fields: [ownerId], references: [id])
+  transactions Transaction[] @relation("ProductTransactions")
+}
+
+model Transaction {
+  id        Int               @id @default(autoincrement())
+  productId Int
+  buyerId   Int?
+  startDate DateTime
+  endDate   DateTime?
+  status    TransactionStatus @default(COMPLETED)
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+  type      TransactionType
+  buyer     User?             @relation("UserTransactions", fields: [buyerId], references: [id])
+  product   Product           @relation("ProductTransactions", fields: [productId], references: [id])
+}
+
+enum ProductStatus {
+  AVAILABLE
+  SOLD
+  DELETED
+}
+
+enum TransactionType {
+  BUY
+  RENT
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
+}
+
+enum Category {
+  ELECTRONICS
+  FURNITURE
+  HOME_APPLIANCES
+  SPORTING_GOODS
+  OUTDOOR
+  TOYS
 }
