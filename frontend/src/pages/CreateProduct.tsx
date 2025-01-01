@@ -1,6 +1,6 @@
 import React from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
-import { ProductFormProvider} from '../contexts/ProductFormContext';
+import { ProductFormProvider } from '../contexts/ProductFormContext';
 import { TitleStep } from './create-steps/TitleStep';
 import { CategoryStep } from './create-steps/CategoryStep';
 import { DescriptionStep } from './create-steps/DescriptionStep';

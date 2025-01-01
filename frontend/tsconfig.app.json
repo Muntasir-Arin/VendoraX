@@ -27,5 +27,5 @@
     "noFallthroughCasesInSwitch": false,
     "noUncheckedSideEffectImports": false
   },
-  "include": ["src"]
+  "include": ["src", "src/lib/apollo-client.ts"]
 }

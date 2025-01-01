@@ -65,6 +65,23 @@ export const GET_PRODUCTS = gql`
   }
 `;
 
+export const GET_TOP_VIEWED = gql`
+  query GetTopViewedAvailableProducts($limit: Int) {
+  getTopViewedAvailableProducts(limit: $limit) {
+    id
+    name
+    price
+    pricePer
+    viewCount
+    status
+    categories
+    createdAt
+  }
+}
+`;
+
+
+
 export const GET_USER_TRANSACTIONS = gql`
   query GetUserTransactions {
     getUserTransactions {
@@ -80,6 +97,34 @@ export const GET_USER_TRANSACTIONS = gql`
         price
         pricePer
         priceUnit
+        categories
+      }
+      buyer {
+        id
+        email
+        firstName
+        lastName
+      }
+    }
+  }
+`;
+
+export const GET_USER_PRODUCT_TRANSACTIONS = gql`
+  query GetUserProductTransactions {
+    getUserProductTransactions {
+      id
+      productId
+      buyerId
+      type
+      startDate
+      endDate
+      product {
+        id
+        name
+        price
+        pricePer
+        priceUnit
+        categories
       }
       buyer {
         id

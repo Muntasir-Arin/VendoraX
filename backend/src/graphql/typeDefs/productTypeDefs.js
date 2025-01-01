@@ -64,8 +64,12 @@ const productTypeDefs = gql`
     getProducts(status: ProductStatus, category: String): [Product!]!
     getUserProducts: [Product!]!
     getUserTransactions: [Transaction!]!
+    getUserProductTransactions: [Transaction!]!
     checkRentedProduct(productId: Int!): [Transaction!]!
     getProductTransactions(productId: Int!): [Transaction!]!
+    getTopViewedAvailableProducts(limit: Int): [Product!]!
+
+
   }
 
   type Mutation {

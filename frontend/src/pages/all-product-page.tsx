@@ -1,42 +1,77 @@
-import { Link } from 'react-router-dom';
-import { products } from '../lib/data';
+import React from 'react'
+import { Link } from 'react-router-dom'
+import { ArrowUpRight, Clock, DollarSign, Eye } from 'lucide-react'
 
-export  function ProductsPage() {
+import { Button } from "@/components/ui/button"
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { GET_PRODUCTS } from '@/lib/graphql/queries'
+import { useQuery } from '@apollo/client'
+
+
+const ProductsPage: React.FC = () => {
+  const { data, loading, error } = useQuery(GET_PRODUCTS, {
+    variables: { status: "AVAILABLE" },
+  });
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
   return (
-    <div className="min-h-screen bg-gray-50">
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h1 className="text-4xl font-bold mb-8">All Products</h1>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {products.map((product) => (
-            <div key={product.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-              <img 
-                src={product.image} 
-                alt={product.name}
-                className="w-full h-48 object-cover"
-              />
-              <div className="p-6">
-                <div className="flex justify-between items-start mb-2">
-                  <h2 className="text-xl font-semibold">{product.name}</h2>
-                  <span className="text-orange-500 font-bold">${product.price}</span>
+    <div className="container mx-auto py-10 min-h-[60vh]">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-24">
+        {data.getProducts.map((product) => (
+          <Card key={product.id} className="flex flex-col overflow-hidden border-2 border-muted hover:border-orange-400 transition-colors duration-300">
+            <CardHeader>
+              <CardTitle className="text-2xl font-bold ">{product?.name}</CardTitle>
+            </CardHeader>
+            <CardContent className="flex-grow">
+              <div className="flex flex-wrap gap-2 mb-4">
+                {product.categories.slice(0, 3).map((category) => (
+                  <span key={category} className="px-2 py-1 bg-orange-100 text-orange-800 text-xs font-semibold rounded-full">
+                  {category}
+                  </span>
+                ))}
+                {product?.categories.length > 3 && (
+                  <span className="px-2 py-1 bg-orange-100 text-orange-800 text-xs font-semibold rounded-full">
+                  +{product?.categories.length - 3}
+                  </span>
+                )}
+              </div>
+              <p className="text-gray-600 mb-4">{product?.description}</p>
+              <div className="space-y-2">
+                <div className="flex items-center text-gray-700">
+                  <DollarSign className="w-5 h-5 mr-2 text-orange-500" />
+                  <span className="font-semibold">Buy: ${product?.price}</span>
                 </div>
-                <p className="text-sm text-gray-500 mb-2">Category: {product.category}</p>
-                <p className="text-gray-600 mb-4 line-clamp-2">{product.description}</p>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-500">Condition: {product.condition}</span>
-                  <Link
-                    to={`/products/${product.id}`}
-                    className="text-orange-500 hover:text-orange-600 font-medium text-sm"
-                  >
-                    See more →
-                  </Link>
+                <div className="flex items-center text-gray-700">
+                  <Clock className="w-5 h-5 mr-2 text-orange-500" />
+                  <span className="font-semibold">Rent: ${product?.pricePer} {product?.priceUnit|| 'per hour'}</span>
+                </div>
+                <div className="flex items-center text-gray-700">
+                  <Eye className="w-5 h-5 mr-2 text-orange-500" />
+                  <span className="font-semibold">Views: {product?.viewCount}</span>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-      </main>
+            </CardContent>
+            <CardFooter>
+              <Button asChild className="w-full bg-orange-500 hover:bg-orange-600">
+                <Link to={`/products/${product.id}`}>
+                  View Details
+                  <ArrowUpRight className="w-4 h-4 ml-2" />
+                </Link>
+              </Button>
+            </CardFooter>
+          </Card>
+        ))}
+      </div>
     </div>
-  );
+  )
 }
+
+export default ProductsPage
 

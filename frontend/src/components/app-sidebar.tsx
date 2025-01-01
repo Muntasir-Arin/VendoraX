@@ -1,4 +1,4 @@
-import { ShoppingBag, Home, PackageSearch, Scan, LogOut } from "lucide-react"
+import { ShoppingBag, Home, PackageSearch, Scan, LogOut, CircleDollarSign } from "lucide-react"
 
 import {
   Sidebar,
@@ -35,6 +35,11 @@ const items = [
     title: "Purchase History",
     url: "/dashboard/purchasehistory",
     icon: ShoppingBag,
+  },
+  {
+    title: "Lent/Sold",
+    url: "/dashboard/lentsoldhistory",
+    icon: CircleDollarSign,
   },
 
 ]

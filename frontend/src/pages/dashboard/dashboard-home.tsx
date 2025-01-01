@@ -1,6 +1,10 @@
 import SidebarLayout from "@/components/dash-layout";
 import { useQuery } from "@apollo/client";
-import { GET_ME_QUERY, GET_USER_TRANSACTIONS, GET_USER_PRODUCTS } from "../../lib/graphql/queries";
+import {
+  GET_ME_QUERY,
+  GET_USER_TRANSACTIONS,
+  GET_USER_PRODUCTS,
+} from "../../lib/graphql/queries";
 import {
   PlusCircle,
   Package,
@@ -18,9 +22,21 @@ import {
 import { Link } from "react-router-dom";
 
 export default function DashboardHome() {
-  const { data: meData, loading: meLoading, error: meError } = useQuery(GET_ME_QUERY);
-  const { data: transactionsData, loading: transactionsLoading, error: transactionsError } = useQuery(GET_USER_TRANSACTIONS);
-  const { data: productsData, loading: productsLoading, error: productsError } = useQuery(GET_USER_PRODUCTS);
+  const {
+    data: meData,
+    loading: meLoading,
+    error: meError,
+  } = useQuery(GET_ME_QUERY);
+  const {
+    data: transactionsData,
+    loading: transactionsLoading,
+    error: transactionsError,
+  } = useQuery(GET_USER_TRANSACTIONS);
+  const {
+    data: productsData,
+    loading: productsLoading,
+    error: productsError,
+  } = useQuery(GET_USER_PRODUCTS);
 
   if (meLoading || transactionsLoading || productsLoading)
     return (
@@ -30,7 +46,14 @@ export default function DashboardHome() {
     );
 
   if (meError || transactionsError || productsError)
-    return <div className="text-red-500">Error: {meError?.message || transactionsError?.message || productsError?.message}</div>;
+    return (
+      <div className="text-red-500">
+        Error:{" "}
+        {meError?.message ||
+          transactionsError?.message ||
+          productsError?.message}
+      </div>
+    );
 
   const products = productsData?.getUserProducts || [];
   const transactions = transactionsData?.getUserTransactions || [];
@@ -53,9 +76,7 @@ export default function DashboardHome() {
                   <Package className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">
-                    {products.length}
-                  </div>
+                  <div className="text-2xl font-bold">{products.length}</div>
                 </CardContent>
               </Card>
               <Card>
@@ -67,9 +88,11 @@ export default function DashboardHome() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">
-                  {
-                    products.filter((product) => product.status === "AVAILABLE").length
-                  }
+                    {
+                      products.filter(
+                        (product) => product.status === "AVAILABLE"
+                      ).length
+                    }
                   </div>
                 </CardContent>
               </Card>
@@ -93,7 +116,10 @@ export default function DashboardHome() {
                 <CardHeader className="flex justify-between items-center">
                   <CardTitle className="flex justify-between items-center">
                     <span>My Products</span>
-                    <Button asChild className="ml-4 bg-orange-500 hover:bg-orange-600 text-black font-semibold">
+                    <Button
+                      asChild
+                      className="ml-4 bg-orange-500 hover:bg-orange-600 text-black font-semibold"
+                    >
                       <Link to="/create-product/title">
                         <PlusCircle className="mr-2 h-4 w-4" /> Add New Product
                       </Link>
@@ -123,7 +149,12 @@ export default function DashboardHome() {
                   </div>
                 </CardContent>
                 <div className="flex justify-end px-2 pb-2">
-                  <Button variant="ghost" size="sm" asChild className="hover:bg-background">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    asChild
+                    className="hover:bg-background"
+                  >
                     <Link to="/products">
                       See All <ChevronRight className="h-4 w-4" />
                     </Link>
@@ -138,7 +169,9 @@ export default function DashboardHome() {
                 <CardContent>
                   <div className="space-y-4">
                     {transactions.length === 0 ? (
-                      <p className="text-center text-gray-600">No transactions found.</p>
+                      <p className="text-center text-gray-600">
+                        No transactions found.
+                      </p>
                     ) : (
                       transactions.slice(0, 3).map((transaction) => (
                         <div
@@ -146,7 +179,9 @@ export default function DashboardHome() {
                           className="flex items-center justify-between bg-gray-100 p-4 rounded-lg"
                         >
                           <div>
-                            <h3 className="font-semibold">{transaction.product?.name || "Unknown Product"}</h3>
+                            <h3 className="font-semibold">
+                              {transaction.product?.name || "Unknown Product"}
+                            </h3>
                             <p className="text-sm text-gray-600">
                               {transaction.startDate || "N/A"}
                             </p>
@@ -157,26 +192,15 @@ export default function DashboardHome() {
                         </div>
                       ))
                     )}
-                    {transactions.slice(0, 3).map((transaction) => (
-                      <div
-                        key={transaction.id}
-                        className="flex items-center justify-between bg-gray-100 p-4 rounded-lg"
-                      >
-                        <div>
-                          <h3 className="font-semibold">{transaction.product?.name || "Unknown Product"}</h3>
-                          <p className="text-sm text-gray-600">
-                            {transaction.startDate || "N/A"}
-                          </p>
-                        </div>
-                        <p className="font-bold">
-                          ${transaction.product?.price.toFixed(2) || "0.00"}
-                        </p>
-                      </div>
-                    ))}
                   </div>
                 </CardContent>
                 <div className="flex justify-end px-2 pb-2">
-                  <Button variant="ghost" size="sm" asChild className="hover:bg-background">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    asChild
+                    className="hover:bg-background"
+                  >
                     <Link to="/transactions">
                       See All <ChevronRight className="h-4 w-4" />
                     </Link>
