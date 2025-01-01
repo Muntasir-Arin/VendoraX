@@ -61,7 +61,7 @@ export function PurchaseHistoryPage() {
                           transaction.product.priceUnit}
                       </p>
                       <p className="text-sm text-gray-600">
-                        {transaction.startDate}
+                      {new Date(parseInt(transaction.startDate)).toLocaleString()}
                       </p>
                     </div>
                   </div>

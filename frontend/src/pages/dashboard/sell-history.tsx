@@ -47,7 +47,7 @@ export function SellHistoryPage() {
                           ${transaction.product?.price.toFixed(2) || '0.00'}
                           {transaction.type === 'RENT' && transaction.product.priceUnit}
                         </p>
-                        <p className="text-sm text-gray-600">{transaction.startDate}</p>
+                        <p className="text-sm text-gray-600">{new Date(parseInt(transaction.startDate)).toLocaleString()}</p>
                       </div>
                     </div>
                   ))}
