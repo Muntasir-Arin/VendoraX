@@ -27,7 +27,9 @@ model Product {
   ownerId      Int
   createdAt    DateTime      @default(now())
   name         String
-  pricePerHour Float
+  pricePer     Float @default(7)
+  viewCount    Int @default(0)
+  priceUnit    String?
   status       ProductStatus @default(AVAILABLE)
   updatedAt    DateTime      @updatedAt
   categories   Category[]

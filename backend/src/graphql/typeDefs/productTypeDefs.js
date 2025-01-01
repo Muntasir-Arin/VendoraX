@@ -31,13 +31,15 @@ const productTypeDefs = gql`
     name: String!
     description: String!
     price: Float!
-    pricePerHour: Float!
+    pricePer: Float!
+    priceUnit: String
     status: ProductStatus!
     ownerId: Int!
     owner: User!
     categories: [Category!]!
     createdAt: String!
     updatedAt: String!
+    viewCount: Int!
   }
 
   type Transaction {
@@ -71,8 +73,9 @@ const productTypeDefs = gql`
       name: String!
       description: String!
       price: Float!
-      pricePerHour: Float!
+      pricePer: Float!
       categories: [String!]!
+      priceUnit: String
     ): Product!
 
     updateProduct(
@@ -80,7 +83,8 @@ const productTypeDefs = gql`
       name: String
       description: String
       price: Float
-      pricePerHour: Float
+      pricePer: Float
+      priceUnit: String
       categories: [String]
     ): Product!
 

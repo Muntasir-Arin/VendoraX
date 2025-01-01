@@ -1,4 +1,4 @@
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react"
+import { ShoppingBag, Home, PackageSearch, Scan, LogOut } from "lucide-react"
 
 import {
   Sidebar,
@@ -10,53 +10,67 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import { handleLogout } from "@/lib/apollo-client";
+import { toast } from "sonner";
+import { Link, useNavigate } from "react-router-dom";
 
 const items = [
   {
     title: "Home",
-    url: "#",
+    url: "/",
     icon: Home,
   },
   {
-    title: "Inbox",
-    url: "#",
-    icon: Inbox,
+    title: 'Dashboard',
+    url: '/dashboard',
+    icon : Scan
+  },
+  
+  {
+    title: "My Products",
+    url: "/dashboard/myproduct",
+    icon: PackageSearch,
   },
   {
-    title: "Calendar",
-    url: "#",
-    icon: Calendar,
+    title: "Purchase History",
+    url: "/dashboard/purchasehistory",
+    icon: ShoppingBag,
   },
-  {
-    title: "Search",
-    url: "#",
-    icon: Search,
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
-  },
+
 ]
 
 export function AppSidebar() {
+  const navigate = useNavigate();
   return (
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
+          <SidebarGroupLabel>VendoraX</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                  <SidebarMenuButton asChild className="hover:bg-orange-500 hover:text-black">
+                    <Link to={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild className="hover:bg-orange-500 hover:text-black">
+                  <a onClick={() => {
+                        handleLogout();
+                        toast.success('Logged out successfully');
+                        navigate('/');
+
+                    }} >
+                    <LogOut />
+                    <span>Logout</span>
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

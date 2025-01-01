@@ -6,6 +6,14 @@ ApolloError = require('apollo-server-express').ApolloError;
 const productResolver = {
   Query: {
     getProduct: async (_, { id }) => {
+      await prisma.product.update({
+        where: { id, status: { not: 'DELETED' } },
+        data: {
+          viewCount: {
+            increment: 1, 
+          },
+        },
+      });
       return await prisma.product.findUnique({
         where: { id },
       });
@@ -29,6 +37,7 @@ const productResolver = {
       return await prisma.product.findMany({
         where: {
           ownerId: user.id,
+          status: { not: 'DELETED' },
         },
       });
     },  
@@ -101,7 +110,7 @@ const productResolver = {
   
   
   Mutation: {
-    createProduct: async (_, { name, description, price, pricePerHour, categories }, { user }) => {
+    createProduct: async (_, { name, description, price, pricePer, categories, priceUnit }, { user }) => {
       if (!user) {
           throw new AuthenticationError('You must be logged in to create a product');
       }
@@ -110,14 +119,22 @@ const productResolver = {
           throw new Error('All fields are required, including at least one category');
       }
 
+      const validCategories = ['ELECTRONICS', 'FURNITURE', 'HOME_APPLIANCES', 'SPORTING_GOODS', 'OUTDOOR', 'TOYS'];
+      const isValid = categories.every((category) => validCategories.includes(category));
+  
+      if (!isValid) {
+        throw new Error('Invalid category provided');
+      } 
+
       const product = await prisma.product.create({
         data: {
           name,
           description,
           price,
-          pricePerHour,
+          pricePer,
           ownerId: user.id,
-          categories: categories,
+          categories,
+          priceUnit,
         },
       });
   
@@ -147,7 +164,8 @@ const productResolver = {
             name: input.name,
             description: input.description,
             price: input.price,
-            pricePerHour: input.pricePerHour,
+            pricePer: input.pricePer,
+            priceUnit: input.priceUnit,
             categories: input.categories,
           },
         });

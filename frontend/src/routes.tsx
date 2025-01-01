@@ -10,6 +10,9 @@ import { NavBar } from './components/nav-bar';
 
 import { ReactNode } from 'react';
 import DashboardHome from './pages/dashboard/dashboard-home';
+import { PurchaseHistoryPage } from './pages/dashboard/purchase-history';
+import { CreateProduct } from './pages/CreateProduct';
+import ProductListing from './pages/dashboard/my-product';
 
 interface LayoutProps {
   children: ReactNode;
@@ -44,6 +47,10 @@ const AppRoutes: React.FC = () => (
     <Route path="/login" element={<LoginPage />} />
     <Route path="/products/:id" element={<ProductDetailPage />} />
     <Route path = "/dashboard" element={<DashboardHome />} />
+    <Route path = "/dashboard/purchasehistory" element={<PurchaseHistoryPage />} />
+    <Route path="/create-product/*" element={<CreateProduct />} />
+    <Route path="/dashboard/myproduct" element={<ProductListing />} />
+
     </Routes>
     </Layout>
   </Router>
