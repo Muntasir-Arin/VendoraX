@@ -155,7 +155,7 @@ export default function DashboardHome() {
                     asChild
                     className="hover:bg-background"
                   >
-                    <Link to="/products">
+                    <Link to="/dashboard/myproduct">
                       See All <ChevronRight className="h-4 w-4" />
                     </Link>
                   </Button>
@@ -201,7 +201,7 @@ export default function DashboardHome() {
                     asChild
                     className="hover:bg-background"
                   >
-                    <Link to="/transactions">
+                    <Link to="/dashboard/purchasehistory">
                       See All <ChevronRight className="h-4 w-4" />
                     </Link>
                   </Button>

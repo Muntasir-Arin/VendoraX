@@ -14,9 +14,10 @@ RUN yarn install --frozen-lockfile
 COPY . .
 
 # Step 6: Build Prisma client
-RUN yarn prisma generate
+RUN npx prisma generate
 
 EXPOSE 4000
 
 # Step 9: Define the command to run the app
-CMD ["sh", "-c", "npx prisma migrate dev && yarn start"]
+CMD ["yarn", "start"]
+
