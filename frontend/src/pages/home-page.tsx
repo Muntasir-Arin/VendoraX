@@ -17,11 +17,55 @@ export function HomePage() {
     variables: { limit: 6 },
   });
   if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
+  if (error) return (<div className="min-h-[70vh] ">
+  <section className="bg-black text-white  py-48">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-3xl">
+        <h1 className="text-5xl font-bold mb-6">
+          Discover Amazing Products at Great Prices
+        </h1>
+        <p className="text-gray-400 text-xl mb-8">
+          Browse through our collection of high-quality products from
+          trusted sellers.
+        </p>
+        <Link to="/products">
+          <Button className="bg-orange-500 hover:bg-orange-600 text-lg px-8 py-6">
+            Browse Products
+            <ArrowRight className="ml-2" size={20} />
+          </Button>
+        </Link>
+      </div>
+    </div>
+  </section>
+
+  <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold mb-12">Featured Products</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[...Array(6)].map((_, index) => (
+                <div key={index} className="animate-pulse flex flex-col space-y-4 p-4 border-2 border-muted rounded-lg">
+                  <div className="h-6 bg-gray-300 rounded w-3/4"></div>
+                  <div className="flex-grow space-y-2">
+                  <div className="h-4 bg-gray-300 rounded w-1/2"></div>
+                  <div className="h-4 bg-gray-300 rounded w-full"></div>
+                  <div className="h-4 bg-gray-300 rounded w-5/6"></div>
+                  </div>
+                  <div className="space-y-2">
+                  <div className="h-4 bg-gray-300 rounded w-1/4"></div>
+                  <div className="h-4 bg-gray-300 rounded w-1/3"></div>
+                  <div className="h-4 bg-gray-300 rounded w-1/2"></div>
+                  </div>
+                </div>
+              ))}
+          </div>
+          
+        </div>
+      </section>
+</div>)
 
   return (
     <div className="min-h-screen">
-      <section className="bg-black text-white pb-32 pt-48">
+      <section className="bg-black text-white py-48">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
             <h1 className="text-5xl font-bold mb-6">
@@ -40,8 +84,6 @@ export function HomePage() {
           </div>
         </div>
       </section>
-
-      {/* Featured Products */}
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold mb-12">Featured Products</h2>

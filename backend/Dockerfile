@@ -16,9 +16,7 @@ COPY . .
 # Step 6: Build Prisma client
 RUN yarn prisma generate
 
-# Step 7: Expose the port that your app will run on
 EXPOSE 4000
 
-# Step 8: Define the command to run the app
-CMD ["yarn", "start"]
-
+# Step 9: Define the command to run the app
+CMD ["sh", "-c", "npx prisma migrate dev && yarn start"]
